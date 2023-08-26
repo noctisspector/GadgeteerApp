@@ -16,7 +16,7 @@ using Gadgeteer.Modules.GHIElectronics;
 namespace GadgeteerApp10.visual {
     public class VisualTitle : VisualText {
 
-        public VisualTitle(string text, int X, int Y) : base(text, X, Y) {
+        public VisualTitle(string text, int X, int Y, Anchor anchor = 0) : base(text, X, Y, anchor) {
             _font = Resources.GetFont(Resources.FontResources.NinaB);
         }
     }

@@ -26,62 +26,64 @@ namespace GadgeteerApp10.visual {
         }
 
         public void Update() {
-            double len = _joystick.GetPosition().X * _joystick.GetPosition().X + _joystick.GetPosition().Y * _joystick.GetPosition().Y;
+            double len = abs(_joystick.GetPosition().X) + abs(_joystick.GetPosition().Y);
             if (len > _joystick_threshold && VisualButton.SetActive(_joystick.GetPosition())) {
                 redrawInterface();
             }
+        }
+
+        private double abs(double x) {
+            Byte[] bytes = BitConverter.GetBytes(x);
+            bytes[7] &= 0x7F;
+            return BitConverter.ToDouble(bytes, 0);
         }
 
         protected void ReserveElements(int number) {
             _elements = new ElementVector(number);
         }
 
-        protected VisualButton AddButton(string text, int X, int Y, EventHandler clicked) {
-            VisualButton tmp = new VisualButton(text, X, Y);
-            tmp.ButtonClicked += clicked;
-            _elements.Add(tmp);
-            return tmp;
-        }
-
-        protected VisualText AddText(string text, int X, int Y) {
-            return new VisualText(text, X, Y);
-        }
-
-        protected VisualTitle AddTitle(string text, int X, int Y) {
-            return new VisualTitle(text, X, Y);
+        protected void BakeElements() {
+            for (int i = 0; i < _elements.Size(); i++)
+                _elements[i].Bake();
         }
 
         protected void redrawInterface() {
-            _visual_buffer++;
-            if (_visual_buffer > _visual_buffer_threshold) {
-                _display.Clear();
-                _visual_buffer = 0;
-            }
-
             for (int i = 0; i < _elements.Size(); i++)
                 _elements[i].Draw(_display);
         }
 
+        // This framework doesn't support generic types
         protected ElementVector _elements;
+
         protected Joystick _joystick;
         protected DisplayN18 _display;
-        private int _visual_buffer;
 
         protected const int _X_pd = 4;
         protected const int _Y_pd = 4;
         protected const int _X_sp = 4;
         protected const int _Y_sp = 4;
 
-        private const double _joystick_threshold = 0.8 * 0.8;
-        private const int _visual_buffer_threshold = 10;
+        private const double _joystick_threshold = 0.8;
 
-        //private VisualPanel _prev_panel = null;
+        // Methods for adding specific elements
 
-        //public void SwitchPanel(VisualPanel next) {
-        //    _ActivePanel = next;
-        //    _ActivePanel._prev_panel = this;
-        //}
+        protected VisualButton AddButton(string text, int X, int Y, EventHandler clicked, VisualElement.Anchor anchor = 0) {
+            VisualButton tmp = new VisualButton(text, X, Y, anchor);
+            tmp.ButtonClicked += clicked;
+            _elements.Add(tmp);
+            return tmp;
+        }
 
-        //private static VisualPanel _ActivePanel;
+        protected VisualText AddText(string text, int X, int Y, VisualElement.Anchor anchor = 0) {
+            VisualText tmp = new VisualText(text, X, Y, anchor);
+            _elements.Add(tmp);
+            return tmp;
+        }
+
+        protected VisualTitle AddTitle(string text, int X, int Y, VisualElement.Anchor anchor = 0) {
+            VisualTitle tmp = new VisualTitle(text, X, Y, anchor);
+            _elements.Add(tmp);
+            return tmp;
+        }
     }
 }

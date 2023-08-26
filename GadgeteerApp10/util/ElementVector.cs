@@ -28,9 +28,10 @@ namespace GadgeteerApp10.util {
             }
         }
 
-        public void Add(VisualElement item) {
+        public VisualElement Add(VisualElement item) {
             UpdateCapacity(_size++);
             _data[_size - 1] = item;
+            return item;
         }
 
         public int Size() {

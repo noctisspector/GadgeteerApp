@@ -16,7 +16,7 @@ using Gadgeteer.Modules.GHIElectronics;
 namespace GadgeteerApp10.visual {
     public class VisualButton : VisualElement {
 
-        public VisualButton(string text, int X, int Y) : base(text, X, Y) {
+        public VisualButton(string text, int X, int Y, Anchor anchor = 0) : base(text, X, Y, anchor) {
             _draw_border = true;
             _draw_text = true;
         }

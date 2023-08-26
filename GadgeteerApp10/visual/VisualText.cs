@@ -16,7 +16,7 @@ using Gadgeteer.Modules.GHIElectronics;
 namespace GadgeteerApp10.visual {
     public class VisualText : VisualElement {
 
-        public VisualText(string text, int X, int Y) : base(text, X, Y) {
+        public VisualText(string text, int X, int Y, Anchor anchor = 0) : base(text, X, Y, anchor) {
             _draw_text = true;
         }
     }
