@@ -22,7 +22,7 @@ namespace GadgeteerApp10.visual.panels {
 
             ReserveElements(4);
             VisualTitle TITLE = AddTitle("Main Menu", _X_pd, _Y_pd);
-            VisualButton BUTTON_TurnOn = AddButton("Turn on ", _X_pd, TITLE.Bottom() + _Y_sp, TurnOn_clicked);
+            VisualButton BUTTON_TurnOn = AddButton("Turn on", _X_pd, TITLE.Bottom() + _Y_sp, TurnOn_clicked);
             VisualButton BUTTON_TurnOff = AddButton("Turn off", _X_pd, BUTTON_TurnOn.Bottom() +_Y_sp , TurnOff_clicked);
             VisualText TEXT_Quit = AddText("Back (esc)", _X_pd, display.Height - _Y_pd, VisualElement.Anchor.BottomLeft);
 

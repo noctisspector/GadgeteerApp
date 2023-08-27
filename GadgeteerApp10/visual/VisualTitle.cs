@@ -18,6 +18,7 @@ namespace GadgeteerApp10.visual {
 
         public VisualTitle(string text, int X, int Y, Anchor anchor = 0) : base(text, X, Y, anchor) {
             _font = Resources.GetFont(Resources.FontResources.NinaB);
+            ComputeDims();
         }
     }
 }

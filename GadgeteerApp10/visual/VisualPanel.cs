@@ -26,16 +26,10 @@ namespace GadgeteerApp10.visual {
         }
 
         public void Update() {
-            double len = abs(_joystick.GetPosition().X) + abs(_joystick.GetPosition().Y);
+            double len = System.Math.Abs(_joystick.GetPosition().X) + System.Math.Abs(_joystick.GetPosition().Y);
             if (len > _joystick_threshold && VisualButton.SetActive(_joystick.GetPosition())) {
                 redrawInterface();
             }
-        }
-
-        private double abs(double x) {
-            Byte[] bytes = BitConverter.GetBytes(x);
-            bytes[7] &= 0x7F;
-            return BitConverter.ToDouble(bytes, 0);
         }
 
         protected void ReserveElements(int number) {

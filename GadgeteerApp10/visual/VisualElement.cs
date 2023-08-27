@@ -27,22 +27,25 @@ namespace GadgeteerApp10.visual {
             _text = text;
             _anchor = anchor;
 
+            ComputeDims();
+        }
+
+        protected void ComputeDims() {
             if (_compute_size) {
                 _font.ComputeExtent(_text, out _size_X, out _size_Y);
                 _size_X += _padding_X * 2;
                 _size_Y += _padding_Y * 2;
             }
-
-            if (anchor == Anchor.BottomLeft)
-                _Y -= _size_Y;
         }
 
         public void Draw(DisplayN18 display) {
+            Bitmap img = Enabled() ? _img_enabled : _img_disabled;
+
             // This is needed to prevent the chip from freezing up and not accepting new assemblies
-            if (_X + _size_X >= display.Width || _Y + _size_Y >= display.Height) 
+            if (_X + img.Width >= display.Width || _Y_anchor() + img.Height >= display.Height) 
                 throw new InvalidOperationException("Invalid element position.");
 
-            display.Draw(Enabled() ? _img_enabled : _img_disabled, _X, _Y);
+            display.Draw(img, _X, _Y_anchor());
         }
 
         public void Bake() {
@@ -51,7 +54,8 @@ namespace GadgeteerApp10.visual {
         }
 
         private Bitmap BakeColor(GT.Color color) {
-            /*Bitmap bmp = new Bitmap(_size_X + 10, _size_Y + 10);
+            // The width/height MUST be even, or the image is sheared
+            Bitmap bmp = new Bitmap(NearestTwo(_size_X + 1), NearestTwo(_size_Y + 1));
 
             if (_draw_border) {
                 bmp.DrawLine(color, 1, 0, 0, _size_X, 0);
@@ -64,15 +68,20 @@ namespace GadgeteerApp10.visual {
                 bmp.DrawText(_text, _font, color, _padding_X, _padding_Y);
             }
             
-            return bmp;*/
+            return bmp;
+        }
+
+        // Rounds up to nearest multiple of two
+        private static int NearestTwo(int x) {
+            return x + (x & 0x1);
         }
 
         public int Right() {
-            return _size_X + _X;
+            return _size_X + _X + _padding;
         }
 
         public int Bottom() {
-            return _size_Y + _Y;
+            return _size_Y + _Y + _padding;
         }
 
         protected virtual bool Enabled() {
@@ -84,12 +93,22 @@ namespace GadgeteerApp10.visual {
         protected int _X;
         protected int _Y;
 
+        protected int _Y_anchor() {
+            switch (_anchor) {
+                case Anchor.TopLeft: return _Y;
+                case Anchor.BottomLeft: return _Y - _size_Y;
+                default: return 0;
+            }
+        }
+
         protected int _size_X = 0;
         protected int _size_Y = 0;
         protected Font _font = Resources.GetFont(Resources.FontResources.small);
         protected int _padding_X = 4;
         protected int _padding_Y = 2;
         protected Anchor _anchor = Anchor.TopLeft;
+
+        private const int _padding = 2;
 
         protected bool _draw_border = false;
         protected bool _draw_text = false;
